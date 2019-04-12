@@ -1,6 +1,7 @@
 <?php namespace RainLab\Pages\Classes;
 
 use Cms;
+use Url;
 use File;
 use Lang;
 use Cache;
@@ -756,10 +757,11 @@ class Page extends ContentBase
         $result = [];
 
         if ($item->type == 'static-page') {
+            $locale = \RainLab\Translate\Classes\Translator::instance()->getLocale();
             $pageInfo = $tree[$item->reference];
-            $result['url'] = Cms::url($pageInfo['url']);
+            $result['url'] = Url::to($pageInfo['url']);
             $result['mtime'] = $pageInfo['mtime'];
-            $result['isActive'] = self::urlsAreEqual($result['url'], $url);
+            $result['isActive'] = Url::to($locale . $pageInfo['url']) == $url;
         }
 
         if ($item->nesting || $item->type == 'all-static-pages') {

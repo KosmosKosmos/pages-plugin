@@ -68,6 +68,11 @@ class Menu extends CmsObject
         'itemData'
     ];
 
+    public static function loadCached($theme, $fileName)
+    {
+        return static::inTheme($theme)->find($fileName);
+    }
+
     /**
      * Triggered before the menu is saved.
      * @return void
@@ -238,6 +243,29 @@ class Menu extends CmsObject
     }
 
     /**
+     * Returns the localized title
+     * @param string $title The title to be translated.
+     * @param string $locale The locale as a string.
+     * @return string The localized title
+     */
+    protected function getLocaleTitle($title, $locale) {
+        return is_array($title) ? key_exists($locale, $title) && $title[$locale] != '' ? $title[$locale] : $title['en'] : $title;
+    }
+
+    /**
+     * Returns the current URL with localisation e.g. 'en/page'
+     * @param string $locale The locale as a string.
+     * @return string The current URL with localisation
+     */
+    protected function getCurrentUrlWithLocale($locale) {
+        $currentUrl = Request::path();
+        if (!strlen($currentUrl)) {
+            $currentUrl = '/';
+        }
+        return Request::segment(1) == $locale ? $currentUrl : $locale . '/' . $currentUrl;
+    }
+
+    /**
      * Returns the menu item references.
      * This function is used on the front-end.
      * @param Cms\Classes\Page $page The current page object.
@@ -245,21 +273,16 @@ class Menu extends CmsObject
      */
     public function generateReferences($page)
     {
-        $currentUrl = Request::path();
-
-        if (!strlen($currentUrl)) {
-            $currentUrl = '/';
-        }
-
-        $currentUrl = Str::lower(Url::to($currentUrl));
+        $locale = \RainLab\Translate\Classes\Translator::instance()->getLocale();
+        $currentUrl = Str::lower(Url::to($this->getCurrentUrlWithLocale($locale)));
 
         $activeMenuItem = $page->activeMenuItem ?: false;
-        $iterator = function($items) use ($currentUrl, &$iterator, $activeMenuItem) {
+        $iterator = function($items) use ($currentUrl, &$iterator, $activeMenuItem, $locale) {
             $result = [];
 
             foreach ($items as $item) {
                 $parentReference = new MenuItemReference;
-                $parentReference->title = $item->title;
+                $parentReference->title = $this->getLocaleTitle($item->title, $locale);
                 $parentReference->code = $item->code;
                 $parentReference->viewBag = $item->viewBag;
 
@@ -283,18 +306,28 @@ class Menu extends CmsObject
                                 continue;
                             }
 
+                            if ($item->type == 'cms-page' && isset($itemInfo['url'])) {
+                                $pathSections = explode('/', $itemInfo['url']);
+                                if ($pathSections[3] != $locale) {
+                                    $pathSections[3] = $locale;
+                                };
+                                $itemInfo['url'] = implode($pathSections, '/');
+                                $itemInfo['isActive'] = $itemInfo['url'] == $currentUrl;
+                            }
+
                             if (!$item->replace && isset($itemInfo['url'])) {
                                 $parentReference->url = $itemInfo['url'];
                                 $parentReference->isActive = $itemInfo['isActive'] || $activeMenuItem === $item->code;
                             }
 
                             if (isset($itemInfo['items'])) {
-                                $itemIterator = function($items) use (&$itemIterator, $parentReference) {
+                                $itemIterator = function($items) use (&$itemIterator, $parentReference, $locale) {
                                     $result = [];
 
                                     foreach ($items as $item) {
                                         $reference = new MenuItemReference;
-                                        $reference->title = isset($item['title']) ? $item['title'] : '--no title--';
+                                        $title = isset($item['title']) ? $item['title'] : '--no title--';
+                                        $reference->title = $this->getLocaleTitle($title, $locale);
                                         $reference->url = isset($item['url']) ? $item['url'] : '#';
                                         $reference->isActive = isset($item['isActive']) ? $item['isActive'] : false;
                                         $reference->viewBag = isset($item['viewBag']) ? $item['viewBag'] : [];

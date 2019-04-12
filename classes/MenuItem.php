@@ -14,8 +14,10 @@ use Event;
  * @package rainlab\pages
  * @author Alexey Bobkov, Samuel Georges
  */
-class MenuItem
+class MenuItem extends \October\Rain\Halcyon\Model
 {
+    public $implement = ['@RainLab.Translate.Behaviors.TranslatableModel'];
+
     /**
      * @var string Specifies the menu title
      */
@@ -85,6 +87,10 @@ class MenuItem
         'viewBag'
     ];
 
+    public $translatable = ['title'];
+
+    public $translatableModel = 'RainLab\Translate\Classes\MLContent';
+
     /**
      * @var array Contains the view bag properties.
      * This property is used by the menu editor internally.
@@ -92,7 +98,7 @@ class MenuItem
     public $viewBag = [];
 
     /**
-     * Initializes a menu item from a data array. 
+     * Initializes a menu item from a data array.
      * @param array $items Specifies the menu item data.
      * @return Returns an array of the MenuItem objects.
      */

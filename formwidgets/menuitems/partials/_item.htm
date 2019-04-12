@@ -8,7 +8,7 @@
 >
     <div>
         <a href="#" data-menu-item-link>
-            <span class="title"><?= e($item->title) ?></span>
+            <span class="title"><?= is_array($item->title) ? $item->title['en'] : e($item->title) ?></span>
             <span class="comment"><?= e($this->getReferenceDescription($item)) ?></span>
         </a>
 

@@ -71,7 +71,12 @@ return [
         'external_link' => 'External link',
         'external_link_comment' => 'Open links for this menu item in a new window.',
         'static_page' => 'Static Page',
-        'all_static_pages' => 'All Static Pages'
+        'all_static_pages' => 'All Static Pages',
+        'visibility' => 'Visibility',
+        'visibleLoggedIn' => 'Only if logged in',
+        'visibleLoggedIn_comment' => 'Show this menu item only if a front end user is logged in',
+        'visibleNotLoggedIn' => 'Only if NOT logged in',
+        'visibleNotLoggedIn_comment' => 'Show this menu item only if a front end user is not logged in'
     ],
     'content' => [
         'menu_label' => 'Content',

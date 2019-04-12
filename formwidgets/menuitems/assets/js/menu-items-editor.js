@@ -235,6 +235,31 @@
                 });
 
             }
+            else if (property == 'title') {
+                var translations = $('[name^=RLTranslate]', self.$popupContainer)
+                if (translations) {
+                    if (jQuery.type(val) != 'string') {
+                        var title = val['en'];
+                        translations.each(function (index, el) {
+                            var element = $(el);
+                            var lang = element.attr('data-locale-value');
+                            if (val[lang]) {
+                                element.val(val[lang]);
+                            }
+                        });
+                        val = title;
+                    } else {
+                        translations.each(function (index, el) {
+                            var element = $(el);
+                            var lang = element.attr('data-locale-value');
+                            if (lang == 'en') {
+                                element.val(val);
+                            }
+                        });
+                    }
+                }
+                $('[name="title"]', $popupContainer).val(val);
+            }
             else {
                 var $input = $('[name="'+property+'"]', $popupContainer).not('[type=hidden]')
                 setPropertyOnElement($input, val)
@@ -477,6 +502,17 @@
         }
 
         $('> div span.comment', self.$itemDataContainer).text(referenceDescription)
+
+        var translations = $('[name^=RLTranslate]', self.$popupContainer)
+        if (translations) {
+            var values = {};
+            translations.each(function (index, el) {
+                var element = $(el);
+                var lang = element.attr('data-locale-value');
+                values[lang] = $(el).val();
+            });
+            data['title'] = values;
+        }
 
         this.attachViewBagData(data)
 
