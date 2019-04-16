@@ -257,12 +257,12 @@ class Menu extends CmsObject
      * @param string $locale The locale as a string.
      * @return string The current URL with localisation
      */
-    protected function getCurrentUrlWithLocale($locale) {
+    protected function getCurrentUrlWithLocale($locale, $localPrefix) {
         $currentUrl = Request::path();
         if (!strlen($currentUrl)) {
             $currentUrl = '/';
         }
-        return Request::segment(1) == $locale ? $currentUrl : $locale . '/' . $currentUrl;
+        return !$localPrefix ? $currentUrl : Request::segment(1) == $locale ? $currentUrl : $locale . '/' . $currentUrl;
     }
 
     /**
@@ -274,10 +274,11 @@ class Menu extends CmsObject
     public function generateReferences($page)
     {
         $locale = \RainLab\Translate\Classes\Translator::instance()->getLocale();
-        $currentUrl = Str::lower(Url::to($this->getCurrentUrlWithLocale($locale)));
+        $localPrefix = \Excodus\TranslateExtended\Models\Settings::get('route_prefixing', false);
+        $currentUrl = Str::lower(Url::to($this->getCurrentUrlWithLocale($locale, $localPrefix)));
 
         $activeMenuItem = $page->activeMenuItem ?: false;
-        $iterator = function($items) use ($currentUrl, &$iterator, $activeMenuItem, $locale) {
+        $iterator = function($items) use ($currentUrl, &$iterator, $activeMenuItem, $locale, $localPrefix) {
             $result = [];
 
             foreach ($items as $item) {
@@ -307,11 +308,13 @@ class Menu extends CmsObject
                             }
 
                             if ($item->type == 'cms-page' && isset($itemInfo['url'])) {
-                                $pathSections = explode('/', $itemInfo['url']);
-                                if ($pathSections[3] != $locale) {
-                                    $pathSections[3] = $locale;
-                                };
-                                $itemInfo['url'] = implode($pathSections, '/');
+                                if ($localPrefix) {
+                                    $pathSections = explode('/', $itemInfo['url']);
+                                    if ($pathSections[3] != $locale) {
+                                        $pathSections[3] = $locale;
+                                    };
+                                    $itemInfo['url'] = implode($pathSections, '/');
+                                }
                                 $itemInfo['isActive'] = $itemInfo['url'] == $currentUrl;
                             }
 

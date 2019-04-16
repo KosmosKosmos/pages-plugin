@@ -1,5 +1,5 @@
 /*
- * The menu item editor. Provides tools for managing the 
+ * The menu item editor. Provides tools for managing the
  * menu items.
  */
 +function ($) { "use strict";
@@ -257,6 +257,7 @@
                             }
                         });
                     }
+                    $('button[data-active-locale]').html('en')
                 }
                 $('[name="title"]', $popupContainer).val(val);
             }
@@ -304,7 +305,7 @@
             prevSelectedReference = this.referenceSearchOverride;
             this.referenceSearchOverride = null;
         }
-        
+
         if (typeInfo.references) {
             $optionSelector.find('option').remove()
             $referenceFormGroup.show()
@@ -456,7 +457,7 @@
                     return
 
                 var typeInfoProperty = typeInfoPropertyMap[property] !== undefined ? typeInfoPropertyMap[property] : property
-                if ((typeInfo[typeInfoProperty] === undefined || typeInfo[typeInfoProperty] === false) 
+                if ((typeInfo[typeInfoProperty] === undefined || typeInfo[typeInfoProperty] === false)
                     && basicProperties[property] === undefined)
                     delete data[property]
             })
