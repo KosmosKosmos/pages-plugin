@@ -505,7 +505,7 @@
         $('> div span.comment', self.$itemDataContainer).text(referenceDescription)
 
         var translations = $('[name^=RLTranslate]', self.$popupContainer)
-        if (translations) {
+        if (translations.length) {
             var values = {};
             translations.each(function (index, el) {
                 var element = $(el);
