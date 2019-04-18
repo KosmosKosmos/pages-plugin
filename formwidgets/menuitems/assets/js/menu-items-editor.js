@@ -238,7 +238,7 @@
             else if (property == 'title') {
                 var translations = $('[name^=RLTranslate]', self.$popupContainer)
                 if (translations) {
-                    if (jQuery.type(val) != 'string') {
+                    if (jQuery.type(val) != 'string' && val !== null) {
                         var title = val['en'] ? val['en'] : '';
                         translations.each(function (index, el) {
                             var element = $(el);
