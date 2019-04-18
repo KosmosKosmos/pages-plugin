@@ -239,7 +239,7 @@
                 var translations = $('[name^=RLTranslate]', self.$popupContainer)
                 if (translations) {
                     if (jQuery.type(val) != 'string') {
-                        var title = val['en'];
+                        var title = val['en'] ? val['en'] : '';
                         translations.each(function (index, el) {
                             var element = $(el);
                             var lang = element.attr('data-locale-value');
