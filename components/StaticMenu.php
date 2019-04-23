@@ -21,7 +21,7 @@ class StaticMenu extends ComponentBase
     {
         parent::__construct($cmsObject, $properties);
         Event::listen('pages.menu.referencesGenerated', function (&$items) {
-            $user = Auth::getUser();
+            $user = class_exists('RainLab\User\Facades\Auth') ? Auth::getUser() : null;
             $iterator = function ($menuItems) use (&$iterator, $user) {
                 $result = [];
                 foreach ($menuItems as $item) {

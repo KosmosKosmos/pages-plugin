@@ -273,8 +273,8 @@ class Menu extends CmsObject
      */
     public function generateReferences($page)
     {
-        $locale = \RainLab\Translate\Classes\Translator::instance()->getLocale();
-        $localPrefix = \Excodus\TranslateExtended\Models\Settings::get('route_prefixing', false);
+        $locale = class_exists('\RainLab\Translate\Classes\Translator') ? \RainLab\Translate\Classes\Translator::instance()->getLocale() : 'en';
+        $localPrefix = class_exists('\Excodus\TranslateExtended\Models\Settings') ? \Excodus\TranslateExtended\Models\Settings::get('route_prefixing', false) : false;
         $currentUrl = Str::lower(Url::to($this->getCurrentUrlWithLocale($locale, $localPrefix)));
 
         $activeMenuItem = $page->activeMenuItem ?: false;
