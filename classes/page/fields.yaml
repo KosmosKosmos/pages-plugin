@@ -57,9 +57,6 @@ tabs:
             type: textarea
             size: tiny
 
-secondaryTabs:
-    stretch: true
-    fields:
         markup:
             tab: rainlab.pages::lang.editor.content
             type: richeditor
