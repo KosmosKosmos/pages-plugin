@@ -168,9 +168,9 @@ class Plugin extends PluginBase
             }
         });
 
-        Event::listen('pages.menuitem.resolveItem', function($type, $item, $url, $theme) {
+        Event::listen('pages.menuitem.resolveItem', function($type, $item, $url, $theme, $locale) {
             if ($type == 'static-page' || $type == 'all-static-pages') {
-                return StaticPage::resolveMenuItem($item, $url, $theme);
+                return StaticPage::resolveMenuItem($item, $url, $theme, $locale);
             }
         });
 

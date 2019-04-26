@@ -1,6 +1,7 @@
 <?php namespace RainLab\Pages\Classes;
 
 use Url;
+use Log;
 use File;
 use Lang;
 use Yaml;
@@ -300,7 +301,8 @@ class Menu extends CmsObject
                      * If the item type is not URL, use the API to request the item type's provider to
                      * return the item URL, subitems and determine whether the item is active.
                      */
-                    $apiResult = Event::fire('pages.menuitem.resolveItem', [$item->type, $item, $currentUrl, $this->theme]);
+                    $apiResult = Event::fire('pages.menuitem.resolveItem', [$item->type, $item, $currentUrl, $this->theme, $localPrefix ? $locale : '']);
+//                    Log::info($apiResult);
                     if (is_array($apiResult)) {
                         foreach ($apiResult as $itemInfo) {
                             if (!is_array($itemInfo)) {

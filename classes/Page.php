@@ -1,6 +1,7 @@
 <?php namespace RainLab\Pages\Classes;
 
 use Cms;
+use Log;
 use Url;
 use File;
 use Lang;
@@ -736,9 +737,9 @@ class Page extends ContentBase
      * - url - the menu item URL. Not required for menu item types that return all available records.
      *   The URL should be returned relative to the website root and include the subdirectory, if any.
      *   Use the Cms::url() helper to generate the URLs.
-     * - isActive - determines whether the menu item is active. Not required for menu item types that 
+     * - isActive - determines whether the menu item is active. Not required for menu item types that
      *   return all available records.
-     * - items - an array of arrays with the same keys (url, isActive, items) + the title key. 
+     * - items - an array of arrays with the same keys (url, isActive, items) + the title key.
      *   The items array should be added only if the $item's $nesting property value is TRUE.
      * @param \RainLab\Pages\Classes\MenuItem $item Specifies the menu item.
      * @param \Cms\Classes\Theme $theme Specifies the current theme.
@@ -746,7 +747,7 @@ class Page extends ContentBase
      * The URL is specified relative to the website root, it includes the subdirectory name, if any.
      * @return mixed Returns an array. Returns null if the item cannot be resolved.
      */
-    public static function resolveMenuItem($item, $url, $theme)
+    public static function resolveMenuItem($item, $url, $theme, $locale)
     {
         $tree = self::buildMenuTree($theme);
 
@@ -757,7 +758,6 @@ class Page extends ContentBase
         $result = [];
 
         if ($item->type == 'static-page') {
-            $locale = \RainLab\Translate\Classes\Translator::instance()->getLocale();
             $pageInfo = $tree[$item->reference];
             $result['url'] = Url::to($pageInfo['url']);
             $result['mtime'] = $pageInfo['mtime'];

@@ -30,7 +30,7 @@ class StaticMenu extends ComponentBase
                     if ($item->items) {
                         $item->items = $iterator($item->items);
                     }
-                    if ($loggedIn && $notLoggedIn && $item->viewBag['isHidden'] != "1") {
+                    if ($loggedIn && $notLoggedIn && (!key_exists('isHidden', $item->viewBag) || $item->viewBag['isHidden'] != "1")) {
                         $result[] = $item;
                     }
                 }
