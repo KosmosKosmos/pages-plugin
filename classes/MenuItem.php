@@ -16,6 +16,8 @@ use Event;
  */
 class MenuItem extends \October\Rain\Halcyon\Model
 {
+    public $morphMany = null;
+
     public $implement = ['@RainLab.Translate.Behaviors.TranslatableModel'];
 
     /**
