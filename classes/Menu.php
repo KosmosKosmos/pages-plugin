@@ -263,7 +263,8 @@ class Menu extends CmsObject
         if (!strlen($currentUrl)) {
             $currentUrl = '/';
         }
-        return !$localPrefix ? $currentUrl : Request::segment(1) == $locale ? $currentUrl : $locale . '/' . $currentUrl;
+        return (!$localPrefix ? $currentUrl : Request::segment(1) == $locale) ? $currentUrl :
+                $locale . '/' . $currentUrl;
     }
 
     /**
